@@ -1,0 +1,124 @@
+<html>
+
+<!--
+<script type="text/javascript" src="game_hex.js">
+game_name='hex';
+</script>
+-->
+
+
+<script>
+// -------------------------------------Initialization--------------------------------------
+players=['erfan','kasra'];
+var session=window['new_'+game_name](players);
+
+setup=session.setup;
+state=session.state;
+</script>
+
+
+
+
+
+<head>
+<style>
+body {font-family: Arial;}
+
+/* Style the tab */
+.tab {
+    overflow: hidden;
+    border: 1px solid #ccc;
+    background-color: #f1f1f1;
+}
+
+/* Style the buttons inside the tab */
+.tab button {
+    background-color: inherit;
+    float: left;
+    border: none;
+    outline: none;
+    cursor: pointer;
+    padding: 14px 16px;
+    transition: 0.3s;
+    font-size: 17px;
+}
+
+/* Change background color of buttons on hover */
+.tab button:hover {
+    background-color: #ddd;
+}
+
+/* Create an active/current tablink class */
+.tab button.active {
+    background-color: #ccc;
+}
+
+/* Style the tab content */
+.tabcontent {
+    display: none;
+    padding: 6px 12px;
+    border: 1px solid #ccc;
+    border-top: none;
+}
+</style>
+</head>
+
+<body>
+
+
+<script>
+body=document.getElementsByTagName('BODY')[0];
+</script>
+
+<!------------------------------------------------------------------------------------>
+<!--                                 Users Tabs                                     -->
+<!------------------------------------------------------------------------------------>
+
+
+<div class="tab">
+	<button id="player1tab" class="tablinks" onclick="preview(event, 'player1')" >Player 1</button>
+	<button id="player2tab" class="tablinks" onclick="preview(event, 'player2')" >Player 2</button>
+</div>
+
+
+<div id="playercontent" class="tabcontent">
+</div>
+
+
+
+<script>
+function preview(evt, player) {
+//			alert(JSON.stringify(state));
+//			alert(player);
+    document.getElementById("player1tab").style.backgroundColor=(player=='player1') ? 'gray':'';
+    document.getElementById("player2tab").style.backgroundColor=(player=='player2') ? 'gray':'';	
+	content=document.getElementById("playercontent");
+	content.innerHTML='';
+	content.style.display="block";
+	content.appendChild(window['setupContent_'+game_name](setup,player));
+	content.appendChild(window['stateContent_'+game_name](setup,state,player));
+	action_content=window['actionContent_'+game_name](setup,state,player);
+	action_div=action_content.action_div;
+	input=action_content.input;
+	content.appendChild(action_div);
+	otherplayer=(player=='player1') ? 'player2' : 'player1';
+	submit_but=document.getElementById("submit_but");
+	if(submit_but!=null) {
+	submit_but.type='button';
+	submit_but.style.visibility = "hidden";
+	submit_but.onclick=function() {
+		action=window['getAction_'+game_name](input);
+//		alert(JSON.stringify(window['newState_'+game_name](setup,state,player,action)));
+		if(window['validate_'+game_name](setup,state,player,action)) {
+			state=window['newState_'+game_name](setup,state,player,action);
+//			alert(JSON.stringify(state));
+			preview(evt, otherplayer);
+			} else {alert('Input is not valid.')}};
+	}
+}
+</script>
+
+
+</body>
+
+</html>
